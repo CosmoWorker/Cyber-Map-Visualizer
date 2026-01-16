@@ -44,7 +44,7 @@ def polling():
 
                 event = {
                     "lat": hostData.get("lat"),
-                    "lon": hostData.get("lon"),
+                    "lng": hostData.get("lon"),  # longitude
                     "attack_format": tags[0] if tags else "unknown",
                     "severity": random.choice(severity),
                     "source": "urlhaus",
