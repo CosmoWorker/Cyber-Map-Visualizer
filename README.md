@@ -12,7 +12,7 @@ This project is built under Open Innovation – IT Services, focusing on securit
     * Geo-location enrichment
     * Local Caching of IPs
 
-## Backend (FastAPI)
+## Server (FastAPI)
 ### Features
 * Background polling daemon
 * Event buffering using `deque`
@@ -28,5 +28,20 @@ This project is built under Open Innovation – IT Services, focusing on securit
   "source": "urlhaus",
   "timestamp": 1700000000
 }
+```
+
+### Setup
+#### Server (Using UV)
+* Run the commands 
+```bash
+cd $server
+uv install
+uv run fastapi dev --port 5000
+```
+#### Client (Nextjs)
+* Run the commands
+```bash
+bun install 
+bun dev
 ```
 

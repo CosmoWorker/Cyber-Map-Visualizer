@@ -16,7 +16,7 @@ declare module "@react-three/fiber" {
 extend({ ThreeGlobe: ThreeGlobe });
 
 const RING_PROPAGATION_SPEED = 3;
-const aspect = 1.2;
+// const aspect = 1.2;
 const cameraZ = 300;
 
 type Position = {
@@ -71,12 +71,12 @@ export function Globe({ globeConfig, data }: WorldProps) {
     pointSize: 1,
     atmosphereColor: "#ffffff",
     showAtmosphere: true,
-    atmosphereAltitude: 0.1,
+    atmosphereAltitude: 0.06,
     polygonColor: "rgba(255,255,255,0.7)",
-    globeColor: "#1d072e",
-    emissive: "#000000",
-    emissiveIntensity: 0.1,
-    shininess: 0.9,
+    globeColor: "#020617",
+    emissive: "#1e40af",
+    emissiveIntensity: 0.4,
+    shininess: 0.7,
     arcTime: 2000,
     arcLength: 0.9,
     rings: 1,
@@ -90,7 +90,7 @@ export function Globe({ globeConfig, data }: WorldProps) {
       globeRef.current = new ThreeGlobe();
       groupRef.current.add(globeRef.current);
       setIsInitialized(true);
-      
+
       return () => {
         if (globeRef.current && groupRef.current) {
           groupRef.current.remove(globeRef.current);
@@ -218,7 +218,8 @@ export function Globe({ globeConfig, data }: WorldProps) {
       const newNumbersOfRings = genRandomNumbers(
         0,
         data.length,
-        Math.floor((data.length * 4) / 5),
+        Math.min(8, data.length)
+        // Math.floor((data.length * 4) / 5),
       );
 
       const ringsData = data
@@ -246,7 +247,7 @@ export function WebGLRendererConfig() {
   useEffect(() => {
     gl.setPixelRatio(window.devicePixelRatio);
     gl.setSize(size.width, size.height);
-    gl.setClearColor(0xffaaff, 0);
+    gl.setClearColor(0x000000, 1);
   }, []);
 
   return null;
@@ -255,11 +256,11 @@ export function WebGLRendererConfig() {
 export function World(props: WorldProps) {
   const { globeConfig } = props;
   const scene = new Scene();
-  scene.fog = new Fog(0xffffff, 400, 2000);
+  scene.fog = new Fog(0x020617, 500, 1800);
   return (
-    <Canvas scene={scene} camera={new PerspectiveCamera(50, aspect, 180, 1800)}>
+    <Canvas scene={scene} camera={{ fov: 50, near: 180, far: 1800, position: [0, 0, 300] }}>
       <WebGLRendererConfig />
-      <ambientLight color={globeConfig.ambientLight} intensity={0.6} />
+      <ambientLight color={globeConfig.ambientLight} intensity={1.2} />
       <directionalLight
         color={globeConfig.directionalLeftLight}
         position={new Vector3(-400, 100, 400)}
@@ -284,6 +285,7 @@ export function World(props: WorldProps) {
         minPolarAngle={Math.PI / 3.5}
         maxPolarAngle={Math.PI - Math.PI / 3}
       />
+
     </Canvas>
   );
 }
