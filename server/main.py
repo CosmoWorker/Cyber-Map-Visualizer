@@ -67,14 +67,17 @@ def polling():
                 event = {
                     "lat": hostData.get("lat"),
                     "lng": hostData.get("lon"),  # longitude
-                    "attack_format": tags[0] if tags else "unknown",
+                    "attack_format": tags if tags else [],
                     "severity": random.choice(severity),
                     "source": "urlhaus",
                     "timestamp": int(time.time()),
                 }
 
-                # preventing duplicate coords 
-                if not any(e['lat'] == event['lat'] and e['lng'] == event['lng'] for e in EVENTS):
+                # preventing duplicate coords
+                if not any(
+                    e["lat"] == event["lat"] and e["lng"] == event["lng"]
+                    for e in EVENTS
+                ):
                     EVENTS.append(event)
 
         except Exception as e:
@@ -97,21 +100,38 @@ def events_info():
 
 @app.get("/summary")
 def summary():
-    attack_formats = Counter(e["attack_format"] for e in EVENTS)
+    attack_formats = Counter(
+        tag
+        for e in EVENTS
+        for tag in (
+            e["attack_format"]
+            if isinstance(e["attack_format"], list)
+            else [e["attack_format"]]
+        )
+    )
     return {
         "total_events": len(EVENTS),
         "top_attack_formats": attack_formats.most_common(5),
     }
 
+
 @app.get("/ai/analyze")
 def ai_analyze():
     if not EVENTS:
         return {"analysis": "Insufficient data for analysis. System initializing..."}
-    
-    recent_events = list(EVENTS)[-30:] # last 30 items
-    formats = Counter(e['attack_format'] for e in recent_events)
-    countries = Counter(e.get('country', 'Unknown') for e in recent_events)
-    
+
+    recent_events = list(EVENTS)[-30:]  # last 30 items
+    formats = Counter(
+        tag
+        for e in recent_events
+        for tag in (
+            e["attack_format"]
+            if isinstance(e["attack_format"], list)
+            else [e["attack_format"]]
+        )
+    )
+    countries = Counter(e.get("country", "Unknown") for e in recent_events)
+
     prompt = f"""
     You are a Cyber Defense AI. Analyze this live threat feed summary:
     - Top Attack Vectors: {formats.most_common(3)}
@@ -137,6 +157,7 @@ def ai_analyze():
     except Exception as e:
         logger.error(f"Groq Error: {e}")
         return {"analysis": "AI CONNECTION OFFLINE. MANUAL ANALYSIS REQUIRED."}
+
 
 if __name__ == "__main__":
     main()
