@@ -16,7 +16,7 @@ const HQ_LOCATION = { lat: 20.5937, lng: 78.9629 }; // Example: India (Or set to
 type Event = {
   lat: number;
   lng: number;
-  attack_format: string;
+  attack_format: string[];
   severity: "low" | "medium" | "high";
   timestamp: number;
 };
@@ -199,7 +199,11 @@ export default function Page() {
               {data.slice().reverse().map((e, i) => (
                 <div key={i} className="flex items-center justify-between text-xs border-b border-white/5 pb-1">
                   <div className="flex flex-col">
-                    <span className="text-slate-300 font-mono">{(e.attack_format || "Unknown").substring(0, 12)}</span>
+                    <span className="text-slate-300 font-mono" title={e.attack_format.join(", ")}>
+                      {e.attack_format && e.attack_format.length > 0
+                        ? e.attack_format.join(", ").substring(0, 15) + (e.attack_format.join(", ").length > 15 ? "..." : "")
+                        : "Unknown"}
+                    </span>
                     <span className="text-[10px] text-slate-500">{e.startLat.toFixed(2)}, {e.startLng.toFixed(2)}</span>
                   </div>
                   <span style={{ color: e.color }} className="text-[10px] uppercase font-bold px-1.5 py-0.5 bg-white/5 rounded">
