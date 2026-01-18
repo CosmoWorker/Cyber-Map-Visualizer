@@ -45,3 +45,5 @@ bun install
 bun dev
 ```
 
+### Application Screenshot
+<img width="3056" height="1410" alt="image" src="https://github.com/user-attachments/assets/5aa6f7e2-2643-44a4-a7a2-3cd83eb979de" />
