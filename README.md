@@ -30,6 +30,10 @@ This project is built under Open Innovation – IT Services, focusing on securit
 }
 ```
 
+### System Architecture
+The following Mermaid diagram illustrates an overview of system architecture and data flow: 
+<img width="948" height="1024" alt="image" src="https://github.com/user-attachments/assets/758a51ab-3ca1-4cb2-9977-24e7c046cf19" />
+
 ### Setup
 #### Server (Using UV)
 * Run the commands 
